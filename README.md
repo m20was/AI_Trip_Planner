@@ -30,4 +30,6 @@ uv pip list
 uv pip install langchain
 uv pip list
 doskey/history
+uv run streamlit run streamlit_app.py 
+uv run uvicorn main:app --host 0.0.0.0 --port 8000 --reload 
 ```

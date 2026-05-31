@@ -8,13 +8,13 @@ import sys
 BASE_URL = "http://localhost:8000"  # Backend Endpoint
 
 st.set_page_config(
-    page_title="Travel Planner Agentic Application",
+    page_title="AI Travel Planner",
     page_icon="🌍",
     layout="centered",
     initial_sidebar_state="expanded",
 )
 
-st.title("🌍 Travel Planner Agentic Application")
+st.title("🌍 Marketing Campaign Planner")
 
 # Initialize chat history
 if "messages" not in st.session_state:
@@ -41,7 +41,7 @@ if submit_button and user_input.strip():
             markdown_content = f"""# 🌍 AI Travel Plan
 
             # **Generated:** {datetime.datetime.now().strftime('%Y-%m-%d at %H:%M')}  
-            # **Created by:** Atriyo's Travel Agent
+            # **Created by:** Manish's Travel Agent
 
             ---
 
