@@ -17,7 +17,7 @@ def start_backend():
 
 start_backend()
 
-BASE_URL = "http://localhost:8000"  # Backend Endpoint
+BASE_URL = "http://127.0.0.1:8000"  # Backend Endpoint
 
 st.set_page_config(
     page_title="AI Travel Planner",
