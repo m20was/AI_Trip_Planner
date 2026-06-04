@@ -11,9 +11,10 @@ def start_backend():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     result = sock.connect_ex(('127.0.0.1', 8000))
     sock.close()
-    if result != 0:
-        subprocess.Popen([sys.executable, "-m", "uvicorn", "main:app", "--host", "127.0.0.1", "--port", "8000"])
-        time.sleep(4)  # Wait for backend to initialize
+        import os
+        cwd = os.path.dirname(os.path.abspath(__file__))
+        subprocess.Popen([sys.executable, "-m", "uvicorn", "main:app", "--host", "127.0.0.1", "--port", "8000"], cwd=cwd)
+        time.sleep(5)  # Wait for backend to initialize
 
 start_backend()
 
