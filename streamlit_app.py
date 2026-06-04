@@ -1,9 +1,21 @@
 import streamlit as st
 import requests
 import datetime
-
-# from exception.exceptions import TradingBotException
 import sys
+import subprocess
+import socket
+import time
+
+# Start FastAPI backend in the background if it is not already running
+def start_backend():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    result = sock.connect_ex(('127.0.0.1', 8000))
+    sock.close()
+    if result != 0:
+        subprocess.Popen([sys.executable, "-m", "uvicorn", "main:app", "--host", "127.0.0.1", "--port", "8000"])
+        time.sleep(4)  # Wait for backend to initialize
+
+start_backend()
 
 BASE_URL = "http://localhost:8000"  # Backend Endpoint
 
@@ -55,4 +67,4 @@ if submit_button and user_input.strip():
             st.error(" Bot failed to respond: " + response.text)
 
     except Exception as e:
-        raise f"The response failed due to {e}"
+        st.error(f"The response failed due to: {e}")
