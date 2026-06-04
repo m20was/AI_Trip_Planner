@@ -1,6 +1,6 @@
 # Agentic AI Marketing Campaign Planner
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ai-trip-planner-m20was.streamlit.app/)
+[![Streamlit App](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)](https://ai-trip-planner-m20was.streamlit.app/)
 
 An agentic AI Marketing Campaign Planner built with FastAPI, Streamlit, LangGraph, and Groq. This application runs a robust LangGraph state graph agent utilizing Llama-3.3-70B on Groq to plan detailed marketing and travel campaigns, complete with live weather details, places search, and custom currency/expense calculations.
 
