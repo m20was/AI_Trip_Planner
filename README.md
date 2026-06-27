@@ -122,3 +122,17 @@ In the second terminal window, start the Streamlit web interface:
 uv run streamlit run streamlit_app.py
 ```
 This will automatically launch the frontend in your default browser at `http://localhost:8501`.
+
+---
+
+## How to Run Tests
+
+This project uses `pytest` for unit and integration testing. To execute the tests, run:
+
+```bash
+# Run all tests
+uv run pytest -v
+
+# Run only the unit tests
+uv run pytest tests/unit/ -v
+```
