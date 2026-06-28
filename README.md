@@ -143,7 +143,44 @@ uv run pytest tests/unit/ -v
 
 This application is configured for production-grade cloud deployment using a serverless container architecture on AWS.
 
-### Cloud Architecture
+### Application Architecture
+
+This diagram shows how the Streamlit frontend, FastAPI backend, and LangGraph agent workflow communicate internally:
+
+```mermaid
+graph TD
+    User[User / Web Browser] -->|Interacts on Port 8501| Streamlit[Streamlit UI]
+    Streamlit -->|HTTP POST /query| FastAPI[FastAPI Backend Port 8000]
+    
+    subgraph Container [Docker Network Namespace]
+        FastAPI -->|Initialize Query| Graph[LangGraph State Graph]
+        
+        subgraph AgentLoop [Agent Reasoning Loop]
+            Graph -->|Decides action| LLM[LLM: Llama 3 / GPT]
+            LLM -->|Returns tool arguments| Router{Conditional Router}
+            Router -->|Call Tool| ToolNode[Tool Node Execution]
+            
+            subgraph Tools [Integrated APIs & Logic]
+                ToolNode -->|Google Places API| T1[Places Search]
+                ToolNode -->|OpenWeatherMap API| T2[Weather Search]
+                ToolNode -->|ExchangeRate API| T3[Currency Convert]
+                ToolNode -->|Math Logic| T4[Expense Calculator]
+            end
+            
+            T1 -->|Return result to State| Graph
+            T2 -->|Return result to State| Graph
+            T3 -->|Return result to State| Graph
+            T4 -->|Return result to State| Graph
+            
+            Router -->|Finish Planning| EndState[Final Campaign Plan Markdown]
+        end
+    end
+    
+    EndState -->|JSON Response| Streamlit
+    Streamlit -->|Renders Markdown Plan| User
+```
+
+### Cloud Deployment Architecture
 
 ```mermaid
 graph TD
