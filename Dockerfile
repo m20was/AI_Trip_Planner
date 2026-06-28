@@ -27,5 +27,9 @@ RUN uv pip install --system -r requirements.txt
 EXPOSE 8501
 EXPOSE 8000
 
-# Start the Streamlit application
-CMD ["streamlit", "run", "streamlit_app.py", "--server.port", "8501", "--server.address", "0.0.0.0"]
+# Copy the entrypoint script and make it executable
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Run the entrypoint script
+CMD ["/app/entrypoint.sh"]

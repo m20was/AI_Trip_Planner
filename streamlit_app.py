@@ -6,19 +6,6 @@ import subprocess
 import socket
 import time
 
-# Start FastAPI backend in the background if it is not already running
-def start_backend():
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    result = sock.connect_ex(('127.0.0.1', 8000))
-    sock.close()
-    if result != 0:
-        import os
-        cwd = os.path.dirname(os.path.abspath(__file__))
-        subprocess.Popen([sys.executable, "-m", "uvicorn", "main:app", "--host", "127.0.0.1", "--port", "8000"], cwd=cwd)
-        time.sleep(5)  # Wait for backend to initialize
-
-start_backend()
-
 BASE_URL = "http://127.0.0.1:8000"  # Backend Endpoint
 
 st.set_page_config(
