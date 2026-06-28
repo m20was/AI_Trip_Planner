@@ -136,3 +136,38 @@ uv run pytest -v
 # Run only the unit tests
 uv run pytest tests/unit/ -v
 ```
+
+---
+
+## CI/CD & AWS ECS Fargate Deployment (LLMOps)
+
+This application is configured for production-grade cloud deployment using a serverless container architecture on AWS.
+
+### Cloud Architecture
+
+```mermaid
+graph TD
+    Developer -->|git push master| GitHub[GitHub Repository]
+    GitHub -->|Trigger Actions| Pipeline[GitHub Actions CI/CD]
+    Pipeline -->|Run Unit Tests| Pytest[Pytest Suite]
+    Pipeline -->|Build Docker Image| Docker[Docker Build]
+    Docker -->|Push Image| ECR[Amazon ECR]
+    Pipeline -->|Register Task Definition| ECS[AWS ECS Orchestrator]
+    ECS -->|Deploy Task| Fargate[AWS Fargate Serverless Compute]
+    Fargate -->|Retrieve Credentials| Secrets[AWS Secrets Manager]
+    Fargate -->|Log Output| CW[Amazon CloudWatch Logs]
+    User -->|Access Port 8501| Fargate
+```
+
+### Deployment Details
+
+*   **Containerization (`Dockerfile` & `entrypoint.sh`)**: The application frontend (Streamlit) and backend (FastAPI) are containerized into a single multi-process Docker image launched via a custom entrypoint script.
+*   **Orchestration & Compute (`AWS ECS on Fargate`)**: Containers are deployed serverlessly. AWS manages the scaling and underlying VM infrastructure, eliminating manual host management.
+*   **Secure Credential Management (`AWS Secrets Manager`)**: All API keys (Groq, OpenAI, Google Places, OpenWeatherMap, etc.) are stored in AWS Secrets Manager and resolved dynamically at runtime using IAM Roles, ensuring no credentials are ever checked into Git.
+*   **Observability (`Amazon CloudWatch`)**: App logs are automatically routed from the container to CloudWatch log groups for real-time tracking.
+*   **Automation (`GitHub Actions`)**: Every push to `master` triggers a pipeline that:
+    1. Runs the test suite via Pytest.
+    2. Logins into Amazon ECR.
+    3. Builds, tags, and pushes the Docker container.
+    4. Registers the new ECS Task Definition and triggers a rolling service deployment.
+
