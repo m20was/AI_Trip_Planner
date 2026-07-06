@@ -21,7 +21,7 @@ RUN pip install --no-cache-dir uv
 COPY . /app
 
 # Install the Python dependencies directly to the system python environment
-RUN uv pip install --system -r requirements.txt
+RUN uv pip install --system .
 
 # Expose the port used by Streamlit (8501) and FastAPI (8000)
 EXPOSE 8501

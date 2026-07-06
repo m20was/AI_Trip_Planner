@@ -49,29 +49,40 @@ Navigate to the project root directory and create the virtual environment using 
 # Deactivate conda if active
 conda deactivate
 
-# Create a virtual environment named "env" using uv
-uv venv env --python 3.13
+# Create a virtual environment named ".venv" using uv
+uv venv .venv --python 3.13
 ```
 
 ### 3. Activate the Environment
 Activate the created virtual environment:
 *   **Windows (Command Prompt):**
     ```cmd
-    .\env\Scripts\activate.bat
+    .\.venv\Scripts\activate.bat
     ```
 *   **Windows (PowerShell):**
     ```powershell
-    .\env\Scripts\Activate.ps1
+    .\.venv\Scripts\Activate.ps1
     ```
 *   **macOS / Linux:**
     ```bash
-    source env/bin/activate
+    source .venv/bin/activate
     ```
 
 ### 4. Install Dependencies
-Install all required packages from `requirements.txt`:
+Install and synchronize all project dependencies defined in `pyproject.toml`:
 ```bash
-uv pip install -r requirements.txt
+uv sync
+```
+
+### 5. Managing Dependencies
+To add new libraries to the project (this will automatically install them and update your `pyproject.toml` file):
+```bash
+uv add <package-name>
+```
+
+To remove a library:
+```bash
+uv remove <package-name>
 ```
 
 ---
@@ -107,7 +118,7 @@ LANGCHAIN_PROJECT="AI-Marketing-Campaign-Planner"
 
 ## How to Run the Project
 
-Start both the **FastAPI backend** and the **Streamlit frontend** in separate terminal windows with your virtual environment (`env`) activated in both.
+Start both the **FastAPI backend** and the **Streamlit frontend** in separate terminal windows with your virtual environment (`.venv`) activated in both.
 
 ### 1. Start the Backend (FastAPI)
 In the first terminal window, start the backend server:

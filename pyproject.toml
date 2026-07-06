@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "AI-TRAVEL-PLANNER"
+version = "0.0.1"
+description = "An AI Travel Planner application"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Manish Biswas", email = "manish20was@gmail.com" }
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "langchain",
+    "langchain-community",
+    "langchain-experimental",
+    "fastapi",
+    "python-dotenv",
+    "streamlit",
+    "uvicorn",
+    "pydantic",
+    "httpx",
+    "requests",
+    "langchain_google_community",
+    "langchain_tavily",
+    "langchain_groq",
+    "langchain_openai",
+    "langgraph",
+    "langchain-google-community[places]",
+    "pytest",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
