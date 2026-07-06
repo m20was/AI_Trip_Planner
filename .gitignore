@@ -8,5 +8,8 @@ wheels/
 
 # Virtual environments
 .venv
-env
 .env
+
+# AI Assistants and IDE configurations
+.agents/
+.claude/
