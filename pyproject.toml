@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "AI-TRAVEL-PLANNER"
 version = "0.0.1"
@@ -18,3 +22,6 @@ dependencies = [
     "langchain-google-community[places]",
     "pytest"
 ]
+
+[tool.setuptools.packages.find]
+where = ["."]
