@@ -5,12 +5,12 @@ on:
     branches: [ main, master ]
 
 env:
-  AWS_REGION: ap-southeast-2                   # Your AWS Region from the console
-  ECR_REPOSITORY: ai-trip-planner         # Replace with your Amazon ECR repository name
-  ECS_CLUSTER: ai-planner-cluster         # Replace with your Amazon ECS cluster name
-  ECS_SERVICE: ai-planner-service         # Replace with your Amazon ECS service name
-  ECS_TASK_DEFINITION: .aws/task-definition.json # Path to your ECS task definition file
-  CONTAINER_NAME: trip-planner-container  # Name of the container in your task definition
+  AWS_REGION: ap-southeast-2
+  ECR_REPOSITORY: ai-trip-planner
+  ECS_CLUSTER: ai-planner-cluster
+  ECS_SERVICE: ai-planner-service
+  ECS_TASK_DEFINITION: .aws/task-definition.json
+  CONTAINER_NAME: trip-planner-container
 
 jobs:
   deploy:
@@ -18,12 +18,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the repository
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Step 2: Configure AWS Credentials
-      # Note: Set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in GitHub Repository Secrets
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -31,24 +28,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # Step 3: Login to Amazon ECR
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      # Step 4: Build, Tag, and Push Docker Image to ECR
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          # Build a docker container and push it to ECR so that it can be deployed to ECS.
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      # Step 5: Render new Image ID in the Task Definition
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
@@ -57,7 +50,6 @@ jobs:
           container-name: ${{ env.CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.image }}
 
-      # Step 6: Deploy to Amazon ECS Fargate Service
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:

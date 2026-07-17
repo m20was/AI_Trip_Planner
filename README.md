@@ -7,8 +7,12 @@ An agentic AI Marketing Campaign Planner built with FastAPI, Streamlit, LangGrap
 **Live Deployment:** [https://ai-trip-planner-m20was.streamlit.app/](https://ai-trip-planner-m20was.streamlit.app/)
 
 
-## Screenshots
+## Screenshots & Interactive Demo
 
+### Application Walkthrough (Interactive Recording)
+![AI Marketing Campaign Planner Demo](output_images/demo.webp)
+
+### Interface States
 | User Input (Streamlit Frontend) | AI Marketing Campaign Plan (Output) |
 | :---: | :---: |
 | ![User Input](output_images/input.png) | ![AI Marketing Campaign Plan](output_images/output.png) |
