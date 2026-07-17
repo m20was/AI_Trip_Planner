@@ -20,7 +20,7 @@ resolution-markers = [
 [[package]]
 name = "ai-travel-planner"
 version = "0.0.1"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "fastapi" },
     { name = "langchain" },
