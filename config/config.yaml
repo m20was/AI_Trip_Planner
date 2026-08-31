@@ -2,4 +2,4 @@ llm:
   openai:
     model_name: "o4-mini"
   groq:
-    model_name: "llama-3.3-70b-versatile"
+    model_name: "qwen/qwen3.6-27b"
