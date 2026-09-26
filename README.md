@@ -245,3 +245,10 @@ Once the ECS Fargate task is in `RUNNING` status:
 > [!NOTE]
 > Make sure to type `http://` (not `https://`), followed by `:8501`.
 
+### 📸 AWS Cloud Deployment Verification
+
+| AWS ECS Fargate Task Configuration (`RUNNING`) | Live Application Deployed on AWS ECS |
+| :---: | :---: |
+| ![AWS ECS Fargate Task Configuration](docs/AWS%20ECS.png) | ![Live Deployed Application on AWS](docs/AWS%20Final%20Deploy.png) |
+
+
