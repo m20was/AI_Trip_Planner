@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from agent.agentic_workflow import GraphBuilder
 from starlette.responses import JSONResponse
-from dotenv import load_dotenv
 from pydantic import BaseModel
+from dotenv import load_dotenv
+from agent.agentic_workflow import GraphBuilder
 
 load_dotenv()
 
-app = FastAPI()
+app = FastAPI(title="AI Travel Planner API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -20,26 +20,21 @@ app.add_middleware(
 class QueryRequest(BaseModel):
     question: str
 
+@app.get("/")
+def health_check():
+    """Health check endpoint for container monitoring and cloud load balancers."""
+    return {"status": "healthy", "service": "AI Travel Planner API"}
+
 @app.post("/query")
 async def query_travel_agent(query: QueryRequest):
+    """Process travel queries through the LangGraph AI agent."""
     try:
-        react_app = GraphBuilder(model_provider="gemini")()
+        agent = GraphBuilder(model_provider="gemini")()
+        output = agent.invoke({"messages": [query.question]})
+        raw = output["messages"][-1].content
         
-        # Save workflow graph visualization
-        with open("my_graph.png", "wb") as f:
-            f.write(react_app.get_graph().draw_mermaid_png())
-
-        output = react_app.invoke({"messages": [query.question]})
-
-        if isinstance(output, dict) and "messages" in output:
-            raw_output = output["messages"][-1].content
-            if isinstance(raw_output, list):
-                final_output = "".join([part.get("text", "") if isinstance(part, dict) else str(part) for part in raw_output])
-            else:
-                final_output = str(raw_output)
-        else:
-            final_output = str(output)
-        
-        return {"answer": final_output}
+        # Format text parts cleanly (handles Gemini multi-part responses)
+        answer = "".join(part.get("text", "") if isinstance(part, dict) else str(part) for part in raw) if isinstance(raw, list) else str(raw)
+        return {"answer": answer}
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
