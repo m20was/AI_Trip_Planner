@@ -223,3 +223,25 @@ graph TD
 - **Containerization (`Dockerfile` & `entrypoint.sh`)**: Multi-process container running Streamlit and FastAPI.
 - **Serverless Hosting (`AWS ECS on Fargate`)**: Auto-scaling infrastructure without managing EC2 instances.
 - **Secret Management (`AWS Secrets Manager`)**: API keys injected dynamically at runtime via IAM roles.
+
+### How to Access the Live Application on AWS ECS
+
+Once the ECS Fargate task is in `RUNNING` status:
+
+1. **Navigate to the Running Task:**
+   - In the [AWS Console](https://console.aws.amazon.com/ecs/), go to **Amazon ECS** $\rightarrow$ **Clusters** $\rightarrow$ **`ai-planner-cluster`**.
+   - Click the **Services** tab $\rightarrow$ select **`ai-planner-service`**.
+   - Click the **Tasks** tab and select the active running task.
+
+2. **Step 2: Copy the Public IP & Add `:8501`:**
+   - On the task page, look under the **Networking** section for **Public IP**.
+   - Copy the IP address (for example, if it is `16.176.147.145` or `13.236.80.218`).
+   - Open a new tab in your web browser and enter:
+     ```text
+     http://<YOUR_PUBLIC_IP>:8501
+     ```
+     *(For example: `http://16.176.147.145:8501`)*
+
+> [!NOTE]
+> Make sure to type `http://` (not `https://`), followed by `:8501`.
+

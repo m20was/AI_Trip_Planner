@@ -94,6 +94,30 @@ git push origin master
 
 ---
 
+### Step 3: Access the Live Application on AWS ECS
+
+Once the deployment finishes and the ECS Fargate task enters `RUNNING` status:
+
+1. **Locate the Running Task:**
+   - In AWS Console $\rightarrow$ **Amazon ECS** $\rightarrow$ **Clusters** $\rightarrow$ **`ai-planner-cluster`**.
+   - Click the **Services** tab $\rightarrow$ select **`ai-planner-service`**.
+   - Click the **Tasks** tab and select the active running task.
+
+2. **Step 2: Copy the Public IP & Add `:8501`:**
+   - On the task page, look under the **Networking** section for **Public IP**.
+   - Copy the IP address (for example, if it is `16.176.147.145` or `13.236.80.218`).
+   - Open a new tab in your web browser and enter:
+     ```text
+     http://<YOUR_PUBLIC_IP>:8501
+     ```
+     *(For example: `http://16.176.147.145:8501`)*
+
+> [!NOTE]
+> Make sure to type `http://` (not `https://`), followed by `:8501`.
+
+---
+
+
 ## 4. How the CI/CD Pipeline Works (`.github/workflows/aws.yml`)
 
 1. **Authentication:** Authenticates to AWS using GitHub repository secrets (`AWS_ACCESS_KEY_ID` & `AWS_SECRET_ACCESS_KEY`).
