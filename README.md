@@ -102,7 +102,8 @@ AI_Trip_Planner/
 │   ├── docker_notes.md
 │   ├── api_notes.md
 │   ├── dependencies_notes.md
-│   └── streamlit_notes.md
+│   ├── streamlit_notes.md
+│   └── aws_deployment_notes.md
 ├── tests/
 │   └── unit/test_calculator.py# Automated pytest suite
 ├── streamlit_app.py           # Streamlit frontend UI
