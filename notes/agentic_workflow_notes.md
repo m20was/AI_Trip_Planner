@@ -44,19 +44,14 @@ self.tools = [
 #### After:
 `tools/__init__.py` now defines a centralized `get_tools()` function:
 ```python
-from tools.weather_info_tool import WeatherInfoTool
-from tools.place_search_tool import PlaceSearchTool
-from tools.expense_calculator_tool import CalculatorTool
-from tools.currency_conversion_tool import CurrencyConverterTool
+from tools.weather_info_tool import get_weather
+from tools.place_search_tool import search_places
+from tools.expense_calculator_tool import calculate_expenses
+from tools.currency_conversion_tool import convert_currency
 
 def get_tools():
-    """Consolidate all business tools for the agent."""
-    return [
-        *WeatherInfoTool().weather_tool_list,
-        *PlaceSearchTool().place_search_tool_list,
-        *CalculatorTool().calculator_tool_list,
-        *CurrencyConverterTool().currency_converter_tool_list,
-    ]
+    """Consolidate the 4 core business tools for the agent."""
+    return [get_weather, search_places, calculate_expenses, convert_currency]
 ```
 
 > **BA / Design Principle Highlight:**
@@ -113,19 +108,14 @@ class GraphBuilder:
 from langgraph.prebuilt import create_react_agent
 from prompt_library.prompt import SYSTEM_PROMPT
 from utils.model_loader import ModelLoader
-from tools.weather_info_tool import WeatherInfoTool
-from tools.place_search_tool import PlaceSearchTool
-from tools.expense_calculator_tool import CalculatorTool
-from tools.currency_conversion_tool import CurrencyConverterTool
+from tools.weather_info_tool import get_weather
+from tools.place_search_tool import search_places
+from tools.expense_calculator_tool import calculate_expenses
+from tools.currency_conversion_tool import convert_currency
 
 def get_tools():
-    """Consolidate all business tools for the agent."""
-    return [
-        *WeatherInfoTool().weather_tool_list,
-        *PlaceSearchTool().place_search_tool_list,
-        *CalculatorTool().calculator_tool_list,
-        *CurrencyConverterTool().currency_converter_tool_list,
-    ]
+    """Consolidate the 4 core business tools for the agent."""
+    return [get_weather, search_places, calculate_expenses, convert_currency]
 
 class GraphBuilder:
     def __init__(self, model_provider: str = "gemini"):
