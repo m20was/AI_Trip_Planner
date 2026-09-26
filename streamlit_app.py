@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import importlib
 import prompt_library.prompt
 importlib.reload(prompt_library.prompt)
+import tools
+importlib.reload(tools)
 import agent.agentic_workflow
 importlib.reload(agent.agentic_workflow)
 from agent.agentic_workflow import GraphBuilder
