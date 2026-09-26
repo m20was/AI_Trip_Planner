@@ -24,7 +24,7 @@ st.sidebar.markdown("""
 This assistant curates your journey using:
 - ⛅ **Real-time Weather Forecasts**
 - 🗺️ **Tavily AI Web Discovery**
-- 💱 **Live Currency & Expense Estimations**
+- 💱 **Live Currency & Expense Est.**
 """)
 st.sidebar.caption("App version 1.2.0")
 
