@@ -1,13 +1,13 @@
 import pytest
-from utils.expense_calculator import Calculator
+from tools.expense_calculator_tool import calculate_expenses
 
 # @pytest.mark.parametrize runs the same test function multiple times
-# with different sets of inputs (total, days, expected).
-@pytest.mark.parametrize("total, days, expected", [
-    (100.0, 5, 20.0),   # Case 1: Normal calculation
-    (100.0, 0, 0.0),    # Case 2: Division by zero edge case
-    (0.0, 10, 0.0),     # Case 3: Zero total
+# with different sets of inputs (costs list, expected sum).
+@pytest.mark.parametrize("costs, expected", [
+    ([100.0, 50.0, 25.5], 175.5),  # Case 1: Normal calculation
+    ([], 0.0),                     # Case 2: Empty list
+    ([10.25], 10.25),              # Case 3: Single expense
 ])
-def test_daily_budget(total, days, expected):
-    result = Calculator.calculate_daily_budget(total, days)
+def test_calculate_expenses(costs, expected):
+    result = calculate_expenses.invoke({"costs": costs})
     assert result == expected
