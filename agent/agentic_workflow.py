@@ -8,7 +8,7 @@ from tools.expense_calculator_tool import CalculatorTool
 from tools.currency_conversion_tool import CurrencyConverterTool
 
 class GraphBuilder:
-    def __init__(self, model_provider: str = "groq"):
+    def __init__(self, model_provider: str = "gemini"):
         self.llm = ModelLoader(model_provider=model_provider).load_llm()
         
         self.tools = [

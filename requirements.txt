@@ -1,15 +1,13 @@
 langchain
-langchain-community
-fastapi
-python-dotenv
-streamlit
-uvicorn
-pydantic
-requests
+langchain-google-genai
 langchain_tavily
-langchain_groq
-langchain_openai
 langgraph
-langchain-google-community[places]
+fastapi
+uvicorn
+streamlit
+pydantic
+python-dotenv
+pyyaml
+requests
 pytest
 -e .

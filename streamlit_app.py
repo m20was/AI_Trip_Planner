@@ -1,27 +1,32 @@
 import streamlit as st
 import datetime
 from dotenv import load_dotenv
+import importlib
+import prompt_library.prompt
+importlib.reload(prompt_library.prompt)
+import agent.agentic_workflow
+importlib.reload(agent.agentic_workflow)
 from agent.agentic_workflow import GraphBuilder
 
 load_dotenv()
 
 st.set_page_config(
-    page_title="AI Travel Planner",
-    page_icon=":material/travel:",
+    page_title="AI Travel Concierge",
+    page_icon="✈️",
     layout="centered",
     initial_sidebar_state="expanded",
 )
-st.title("🌍 AI Marketing Campaign Planner")
-st.caption("Plan your next adventure with state-of-the-art AI workflows. Developed by Manish Biswas.")
+st.title("✈️ AI Travel Concierge & Trip Planner")
+st.caption("Curating bespoke, real-time travel itineraries powered by Google Gemini. Developed by Manish Biswas.")
 
-st.sidebar.markdown("### 🌍 AI Travel Planner")
+st.sidebar.markdown("### ✈️ AI Travel Concierge")
 st.sidebar.markdown("""
-This assistant plans your trip using tools for:
-- :material/cloud: Real-time Weather
-- :material/search: Place Search (Google Places)
-- :material/calculate: Currency & Expense Calculation
+This assistant curates your journey using:
+- ⛅ **Real-time Weather Forecasts**
+- 🗺️ **Tavily AI Web Discovery**
+- 💱 **Live Currency & Expense Estimations**
 """)
-st.sidebar.caption("App version 1.1.0")
+st.sidebar.caption("App version 1.2.0")
 
 examples = [
     "Plan a trip to Goa for 5 days",
@@ -49,14 +54,18 @@ with st.form(key="query_form", border=True):
 if submit_button and user_input.strip():
     try:
         with st.spinner("Our AI travel agent is researching and planning your trip..."):
-            agent = GraphBuilder(model_provider="groq")()
+            agent = GraphBuilder(model_provider="gemini")()
             output = agent.invoke({"messages": [user_input]})
-            answer = output["messages"][-1].content
+            raw_content = output["messages"][-1].content
+            if isinstance(raw_content, list):
+                answer = "".join([part.get("text", "") if isinstance(part, dict) else str(part) for part in raw_content])
+            else:
+                answer = str(raw_content)
 
         markdown_content = f"""# 🌍 Your Travel Itinerary
 
 **Generated on:** {datetime.datetime.now().strftime('%Y-%m-%d at %H:%M')}
-**Powered by:** Groq (llama-3.3-70b-versatile)
+**Powered by:** Google Gemini (gemini-3.1-flash-lite)
 **Developed by:** Manish Biswas
 
 ---
@@ -68,20 +77,20 @@ if submit_button and user_input.strip():
 *:material/info: Please verify all timings, flight details, and local weather forecasts prior to departures.*"""
         
         st.markdown(markdown_content)
+        st.download_button(
+            label="📥 Download Itinerary (.md)",
+            data=markdown_content,
+            file_name=f"itinerary_{datetime.datetime.now().strftime('%Y%m%d_%H%M')}.md",
+            mime="text/markdown",
+            use_container_width=True,
+        )
         
     except Exception as e:
         error_msg = str(e)
         st.error(f"Error: {error_msg}")
         
-        if "403" in error_msg or "Access denied" in error_msg:
+        if "429" in error_msg or "RESOURCE_EXHAUSTED" in error_msg or "quota" in error_msg.lower():
             st.warning(
-                "### :material/vpn_lock: Network Block / VPN Issue Detected\n"
-                "The Groq API is blocking your network connection or VPN address.\n\n"
-                "**Steps to fix:**\n"
-                "1. **Disable VPN:** If you are using a VPN or proxy, disable it and refresh the page."
-            )
-        elif "429" in error_msg or "quota" in error_msg or "limit" in error_msg:
-            st.warning(
-                "### :material/hourglass_empty: API Quota Exceeded\n"
-                "The default Groq API key has reached its usage limits or has run out of credits."
+                "### :material/hourglass_empty: Gemini Free-Tier Rate Limit Reached\n"
+                "Google's free-tier rate limit was momentarily exceeded. Please wait 30–60 seconds and submit your query again."
             )

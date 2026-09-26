@@ -23,7 +23,7 @@ class QueryRequest(BaseModel):
 @app.post("/query")
 async def query_travel_agent(query: QueryRequest):
     try:
-        react_app = GraphBuilder(model_provider="groq")()
+        react_app = GraphBuilder(model_provider="gemini")()
         
         # Save workflow graph visualization
         with open("my_graph.png", "wb") as f:
@@ -32,7 +32,11 @@ async def query_travel_agent(query: QueryRequest):
         output = react_app.invoke({"messages": [query.question]})
 
         if isinstance(output, dict) and "messages" in output:
-            final_output = output["messages"][-1].content
+            raw_output = output["messages"][-1].content
+            if isinstance(raw_output, list):
+                final_output = "".join([part.get("text", "") if isinstance(part, dict) else str(part) for part in raw_output])
+            else:
+                final_output = str(raw_output)
         else:
             final_output = str(output)
         

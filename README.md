@@ -1,225 +1,184 @@
-# Agentic AI Marketing Campaign Planner
+# ✈️ Agentic AI Travel Planner
 
 [![Streamlit App](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)](https://ai-trip-planner-m20was.streamlit.app/)
+[![Python 3.13](https://img.shields.io/badge/Python-3.13-blue.svg)](https://www.python.org/)
+[![LangGraph](https://img.shields.io/badge/Orchestration-LangGraph-orange.svg)](https://langchain-ai.github.io/langgraph/)
+[![Google Gemini](https://img.shields.io/badge/LLM-Google%20Gemini-blue.svg)](https://ai.google.dev/)
 
-An agentic AI Marketing Campaign Planner built with FastAPI, Streamlit, LangGraph, and Groq. This application runs a robust LangGraph state graph agent utilizing Llama-3.3-70B on Groq to plan detailed marketing and travel campaigns, complete with live weather details, places search, and custom currency/expense calculations.
+An autonomous AI Travel Concierge built with **FastAPI**, **Streamlit**, and **LangGraph**, powered by **Google Gemini**. The agent dynamically researches real-time destination weather, discovers attractions and authentic eateries via **Tavily AI Search**, and calculates multi-currency trip budgets.
 
 **Live Deployment:** [https://ai-trip-planner-m20was.streamlit.app/](https://ai-trip-planner-m20was.streamlit.app/)
 
+---
 
-## Screenshots & Interactive Demo
+## 📸 Screenshots & Interactive Demo
 
-### Application Walkthrough (Interactive Recording)
-![AI Marketing Campaign Planner Demo](output_images/demo.webp)
+### Application Walkthrough
+![AI Travel Planner Demo](output_images/demo.webp)
 
 ### Interface States
-| User Input (Streamlit Frontend) | AI Marketing Campaign Plan (Output) |
+| User Input (Streamlit Frontend) | Curated Travel Itinerary (Output) |
 | :---: | :---: |
-| ![User Input](output_images/input.png) | ![AI Marketing Campaign Plan](output_images/output.png) |
+| ![User Input](output_images/input.png) | ![AI Travel Plan](output_images/output.png) |
 
 ---
 
-## Features
+## 🌟 Key Features
 
-- **Agentic Workflow:** Powered by **LangGraph** for structured state management, tool execution, and cyclic agent reasoning.
-- **FastAPI Backend:** Lightweight REST API that serves the compiled agent graph and handles real-time queries.
-- **Streamlit Frontend:** An interactive, conversational web interface for seamless planning.
-- **Groq Integration:** Blazing-fast inference using state-of-the-art open-source LLMs (like `Llama-3.3-70B-Versatile`).
-- **Real-Time Tools:**
-  - **Google Places API:** Resolves live local locations, eateries, and attractions.
-  - **OpenWeatherMap API:** Retrieves real-time weather and temperature forecasts.
-  - **Exchange Rate API:** Converts international travel and campaign budgets instantly.
-  - **Expense Calculator:** Dynamically computes daily budgets and overall expenses.
-  - **Tavily Web Search:** Fallback web searching when APIs reach limit thresholds.
-
----
-
-## Setup and Installation
-
-Follow these steps to set up and run the project locally.
-
-### 1. Prerequisites
-- **Python 3.10+** (Python 3.13 recommended)
-- **uv** (Extremely fast Python package manager)
-
-If you don't have `uv` installed, you can install it via pip:
-```bash
-pip install uv
-```
-
-### 2. Clone and Initialize Environment
-Navigate to the project root directory and create the virtual environment using `uv`:
-```bash
-# Deactivate conda if active
-conda deactivate
-
-# Create a virtual environment named ".venv" using uv
-uv venv .venv --python 3.13
-```
-
-### 3. Activate the Environment
-Activate the created virtual environment:
-*   **Windows (Command Prompt):**
-    ```cmd
-    .\.venv\Scripts\activate.bat
-    ```
-*   **Windows (PowerShell):**
-    ```powershell
-    .\.venv\Scripts\Activate.ps1
-    ```
-*   **macOS / Linux:**
-    ```bash
-    source .venv/bin/activate
-    ```
-
-### 4. Install Dependencies
-Install and synchronize all project dependencies defined in `pyproject.toml`:
-```bash
-uv sync
-```
-
-### 5. Managing Dependencies
-To add new libraries to the project (this will automatically install them and update your `pyproject.toml` file):
-```bash
-uv add <package-name>
-```
-
-To remove a library:
-```bash
-uv remove <package-name>
-```
+- **Autonomous Agentic Workflow:** Built with **LangGraph** for cyclic tool reasoning, state tracking, and adaptive decision-making.
+- **Google Gemini Engine:** Uses `gemini-3.1-flash-lite` for lightning-fast (~1.3s) generation with high reliability on Google's free tier.
+- **Real-Time Tool Ecosystem:**
+  - ⛅ **OpenWeatherMap API:** Live forecasts, temperature, and tailored packing advice.
+  - 🗺️ **Tavily AI Search:** Real-time web discovery for top sights, hidden gems, and restaurants.
+  - 💱 **ExchangeRate-API:** Live currency conversions and international budgeting.
+  - 💰 **Expense Calculator:** Automatic hotel costs, daily budgets, and trip totals.
+- **Dual Interfaces:**
+  - **Streamlit Web UI:** Intuitive, conversational interface with instant markdown download.
+  - **FastAPI REST API:** Production-ready endpoint (`/query`) for headless programmatic access.
 
 ---
 
-## Environment Configuration
-
-Create a `.env` file in the project root directory and populate it with your API keys. You can use the template below:
-
-```env
-# LLM Provider Key (Groq is free and recommended)
-GROQ_API_KEY="your_groq_api_key_here"
-OPENAI_API_KEY="optional_openai_api_key_here"
-
-# Location Services Key
-GPLACES_API_KEY="your_google_maps_places_api_key_here"
-
-# Weather Forecast Key
-OPENWEATHERMAP_API_KEY="your_openweathermap_api_key_here"
-
-# Currency Conversion Key
-EXCHANGE_RATE_API_KEY="your_exchangerate_api_key_here"
-
-# Search Fallback Key (Optional)
-TAVILY_API_KEY="optional_tavily_search_api_key_here"
-
-# LangSmith Agent Tracing & Debugging (Optional)
-LANGCHAIN_TRACING_V2="true"
-LANGCHAIN_API_KEY="optional_langchain_api_key_here"
-LANGCHAIN_PROJECT="AI-Marketing-Campaign-Planner"
-```
-
----
-
-## How to Run the Project
-
-Start both the **FastAPI backend** and the **Streamlit frontend** in separate terminal windows with your virtual environment (`.venv`) activated in both.
-
-### 1. Start the Backend (FastAPI)
-In the first terminal window, start the backend server:
-```bash
-uv run uvicorn main:app --reload
-```
-The backend server will run at `http://127.0.0.1:8000`.
-
-### 2. Start the Frontend (Streamlit)
-In the second terminal window, start the Streamlit web interface:
-```bash
-uv run streamlit run streamlit_app.py
-```
-This will automatically launch the frontend in your default browser at `http://localhost:8501`.
-
----
-
-## How to Run Tests
-
-This project uses `pytest` for unit and integration testing. To execute the tests, run:
-
-```bash
-# Run all tests
-uv run pytest -v
-
-# Run only the unit tests
-uv run pytest tests/unit/ -v
-```
-
----
-
-## CI/CD & AWS ECS Fargate Deployment (LLMOps)
-
-This application is configured for production-grade cloud deployment using a serverless container architecture on AWS.
-
-### Application Architecture
-
-This diagram shows how the Streamlit frontend, FastAPI backend, and LangGraph agent workflow communicate internally:
+## 🛠️ Architecture
 
 ```mermaid
 graph TD
-    User[User / Web Browser] -->|Interacts on Port 8501| Streamlit[Streamlit UI]
+    User[Traveler / Web Browser] -->|Interacts on Port 8501| Streamlit[Streamlit UI]
     Streamlit -->|HTTP POST /query| FastAPI[FastAPI Backend Port 8000]
     
     subgraph Container [Docker Network Namespace]
         FastAPI -->|Initialize Query| Graph[LangGraph State Graph]
         
         subgraph AgentLoop [Agent Reasoning Loop]
-            Graph -->|Decides action| LLM[LLM: Llama 3 / GPT]
-            LLM -->|Returns tool arguments| Router{Conditional Router}
-            Router -->|Call Tool| ToolNode[Tool Node Execution]
+            Graph -->|Decides next step| LLM[Google Gemini: Flash-Lite]
+            LLM -->|Request tools| Router{Conditional Router}
+            Router -->|Execute Tool| ToolNode[Tool Execution Node]
             
-            subgraph Tools [Integrated APIs & Logic]
-                ToolNode -->|Google Places API| T1[Places Search]
-                ToolNode -->|OpenWeatherMap API| T2[Weather Search]
-                ToolNode -->|ExchangeRate API| T3[Currency Convert]
-                ToolNode -->|Math Logic| T4[Expense Calculator]
+            subgraph Tools [Integrated APIs]
+                ToolNode -->|Tavily AI Search| T1[Place & Food Search]
+                ToolNode -->|OpenWeatherMap API| T2[Live Weather Forecast]
+                ToolNode -->|ExchangeRate API| T3[Currency Conversion]
+                ToolNode -->|Math Utilities| T4[Expense Calculation]
             end
             
-            T1 -->|Return result to State| Graph
-            T2 -->|Return result to State| Graph
-            T3 -->|Return result to State| Graph
-            T4 -->|Return result to State| Graph
+            T1 -->|Append Observation| Graph
+            T2 -->|Append Observation| Graph
+            T3 -->|Append Observation| Graph
+            T4 -->|Append Observation| Graph
             
-            Router -->|Finish Planning| EndState[Final Campaign Plan Markdown]
+            Router -->|All Data Gathered| EndState[Curated Markdown Itinerary]
         end
     end
     
-    EndState -->|JSON Response| Streamlit
-    Streamlit -->|Renders Markdown Plan| User
+    EndState -->|Return JSON| Streamlit
+    Streamlit -->|Renders Itinerary| User
 ```
 
-### Cloud Deployment Architecture
+---
+
+## 🚀 Setup and Installation
+
+### 1. Prerequisites
+- **Python 3.10+** (Python 3.13 recommended)
+- **uv** package manager
+
+If you don't have `uv` installed:
+```bash
+pip install uv
+```
+
+### 2. Activate Virtual Environment
+Activate your existing workspace virtual environment:
+* **Windows (PowerShell):**
+  ```powershell
+  .\activate.ps1
+  ```
+* **Windows (CMD):**
+  ```cmd
+  activate.bat
+  ```
+* **macOS / Linux:**
+  ```bash
+  source .venv/bin/activate
+  ```
+
+### 3. Install Dependencies
+```bash
+uv pip install -r requirements.txt
+```
+
+---
+
+## 🔑 Environment Configuration
+
+Create a `.env` file in the project root directory with your active API keys:
+
+```env
+# LLM Provider
+GEMINI_API_KEY="your_google_gemini_api_key_here"
+
+# Real-Time Search & Location Discovery
+TAVILY_API_KEY="your_tavily_api_key_here"
+
+# Weather Forecast
+OPENWEATHERMAP_API_KEY="your_openweathermap_api_key_here"
+
+# Currency Conversion
+EXCHANGE_RATE_API_KEY="your_exchangerate_api_key_here"
+
+# LangSmith Tracing & Observability (Optional)
+LANGCHAIN_TRACING_V2="true"
+LANGCHAIN_API_KEY="optional_langchain_api_key_here"
+LANGCHAIN_PROJECT="AI-Trip-Planner"
+```
+
+---
+
+## 🖥️ Running the Application
+
+Start the **FastAPI backend** and **Streamlit frontend** in separate terminal windows with your virtual environment activated:
+
+### 1. Start the Backend (FastAPI)
+```bash
+uvicorn main:app --reload
+```
+API runs at `http://127.0.0.1:8000` (Interactive docs at `http://127.0.0.1:8000/docs`).
+
+### 2. Start the Frontend (Streamlit)
+```bash
+streamlit run streamlit_app.py
+```
+Launches the frontend at `http://localhost:8501`.
+
+---
+
+## 🧪 Running Tests
+
+Execute the unit tests using `pytest`:
+
+```bash
+pytest -v
+```
+
+---
+
+## ☁️ CI/CD & Cloud Deployment (AWS ECS Fargate)
+
+This application is ready for serverless container deployment on AWS:
 
 ```mermaid
 graph TD
     Developer -->|git push master| GitHub[GitHub Repository]
     GitHub -->|Trigger Actions| Pipeline[GitHub Actions CI/CD]
-    Pipeline -->|Run Unit Tests| Pytest[Pytest Suite]
-    Pipeline -->|Build Docker Image| Docker[Docker Build]
+    Pipeline -->|Run Tests| Pytest[Pytest Suite]
+    Pipeline -->|Build Image| Docker[Docker Multi-Stage Build]
     Docker -->|Push Image| ECR[Amazon ECR]
-    Pipeline -->|Register Task Definition| ECS[AWS ECS Orchestrator]
+    Pipeline -->|Register Task Def| ECS[AWS ECS Orchestrator]
     ECS -->|Deploy Task| Fargate[AWS Fargate Serverless Compute]
-    Fargate -->|Retrieve Credentials| Secrets[AWS Secrets Manager]
-    Fargate -->|Log Output| CW[Amazon CloudWatch Logs]
-    User -->|Access Port 8501| Fargate
+    Fargate -->|Fetch Secrets| Secrets[AWS Secrets Manager]
+    Fargate -->|Log Stream| CW[Amazon CloudWatch]
+    User[Traveler] -->|Access Port 8501| Fargate
 ```
 
-### Deployment Details
-
-*   **Containerization (`Dockerfile` & `entrypoint.sh`)**: The application frontend (Streamlit) and backend (FastAPI) are containerized into a single multi-process Docker image launched via a custom entrypoint script.
-*   **Orchestration & Compute (`AWS ECS on Fargate`)**: Containers are deployed serverlessly. AWS manages the scaling and underlying VM infrastructure, eliminating manual host management.
-*   **Secure Credential Management (`AWS Secrets Manager`)**: All API keys (Groq, OpenAI, Google Places, OpenWeatherMap, etc.) are stored in AWS Secrets Manager and resolved dynamically at runtime using IAM Roles, ensuring no credentials are ever checked into Git.
-*   **Observability (`Amazon CloudWatch`)**: App logs are automatically routed from the container to CloudWatch log groups for real-time tracking.
-*   **Automation (`GitHub Actions`)**: Every push to `master` triggers a pipeline that:
-    1. Runs the test suite via Pytest.
-    2. Logins into Amazon ECR.
-    3. Builds, tags, and pushes the Docker container.
-    4. Registers the new ECS Task Definition and triggers a rolling service deployment.
-
+- **Containerization (`Dockerfile` & `entrypoint.sh`)**: Multi-process container running Streamlit and FastAPI.
+- **Serverless Hosting (`AWS ECS on Fargate`)**: Auto-scaling infrastructure without managing EC2 instances.
+- **Secret Management (`AWS Secrets Manager`)**: API keys injected dynamically at runtime via IAM roles.
