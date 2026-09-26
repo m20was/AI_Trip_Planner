@@ -27,14 +27,14 @@ An autonomous AI Travel Concierge built with **FastAPI**, **Streamlit**, and **L
 
 - **Autonomous Agentic Workflow:** Built with **LangGraph** for cyclic tool reasoning, state tracking, and adaptive decision-making.
 - **Google Gemini Engine:** Uses `gemini-3.1-flash-lite` for lightning-fast (~1.3s) generation with high reliability on Google's free tier.
-- **Real-Time Tool Ecosystem:**
-  - ⛅ **OpenWeatherMap API:** Live forecasts, temperature, and tailored packing advice.
-  - 🗺️ **Tavily AI Search:** Real-time web discovery for top sights, hidden gems, and restaurants.
-  - 💱 **ExchangeRate-API:** Live currency conversions and international budgeting.
-  - 💰 **Expense Calculator:** Automatic hotel costs, daily budgets, and trip totals.
+- **Real-Time 4-Tool Ecosystem:**
+  - ⛅ **`get_weather` (OpenWeatherMap API):** Live forecasts, temperature, and tailored packing advice.
+  - 🗺️ **`search_places` (Tavily AI Search):** Real-time web discovery for top sights, hidden gems, and restaurants.
+  - 💱 **`convert_currency` (ExchangeRate-API):** Live foreign exchange conversions and international pricing.
+  - 💰 **`calculate_expenses` (Math Engine):** Deterministic cost summation to prevent LLM math hallucinations.
 - **Dual Interfaces:**
-  - **Streamlit Web UI:** Intuitive, conversational interface with instant markdown download.
-  - **FastAPI REST API:** Production-ready endpoint (`/query`) for headless programmatic access.
+  - **Streamlit Web UI (Port 8501):** Intuitive consumer interface with one-click prompt templates and markdown export.
+  - **FastAPI REST API (Port 8000):** Production-ready endpoints (`/` health check, `/query`) for omnichannel programmatic access.
 
 ---
 
@@ -42,35 +42,75 @@ An autonomous AI Travel Concierge built with **FastAPI**, **Streamlit**, and **L
 
 ```mermaid
 graph TD
-    User[Traveler / Web Browser] -->|Interacts on Port 8501| Streamlit[Streamlit UI]
-    Streamlit -->|HTTP POST /query| FastAPI[FastAPI Backend Port 8000]
+    User[Traveler / Consumer] -->|Interacts on Port 8501| Streamlit[Streamlit Frontend UI]
+    Client[External Client / Mobile App] -->|HTTP POST /query on Port 8000| FastAPI[FastAPI REST Backend]
     
-    subgraph Container [Docker Network Namespace]
-        FastAPI -->|Initialize Query| Graph[LangGraph State Graph]
+    subgraph Container [Docker Unified Container]
+        Streamlit -->|Direct Invocation| Agent[LangGraph ReAct Agent]
+        FastAPI -->|Direct Invocation| Agent
         
-        subgraph AgentLoop [Agent Reasoning Loop]
-            Graph -->|Decides next step| LLM[Google Gemini: Flash-Lite]
-            LLM -->|Request tools| Router{Conditional Router}
+        subgraph AgentLoop [ReAct Agent Reasoning Loop]
+            Agent -->|Decides next step| LLM[Google Gemini 3.1 Flash-Lite]
+            LLM -->|Needs Live Data?| Router{Conditional Router}
             Router -->|Execute Tool| ToolNode[Tool Execution Node]
             
-            subgraph Tools [Integrated APIs]
-                ToolNode -->|Tavily AI Search| T1[Place & Food Search]
-                ToolNode -->|OpenWeatherMap API| T2[Live Weather Forecast]
-                ToolNode -->|ExchangeRate API| T3[Currency Conversion]
-                ToolNode -->|Math Utilities| T4[Expense Calculation]
+            subgraph Tools [The 4 Core Business Tools]
+                ToolNode -->|search_places| T1[Tavily Search API]
+                ToolNode -->|get_weather| T2[OpenWeatherMap API]
+                ToolNode -->|convert_currency| T3[ExchangeRate-API]
+                ToolNode -->|calculate_expenses| T4[Deterministic Math]
             end
             
-            T1 -->|Append Observation| Graph
-            T2 -->|Append Observation| Graph
-            T3 -->|Append Observation| Graph
-            T4 -->|Append Observation| Graph
+            T1 -->|Observation| Agent
+            T2 -->|Observation| Agent
+            T3 -->|Observation| Agent
+            T4 -->|Observation| Agent
             
-            Router -->|All Data Gathered| EndState[Curated Markdown Itinerary]
+            Router -->|Data Complete| EndState[Curated Markdown Itinerary]
         end
     end
     
-    EndState -->|Return JSON| Streamlit
-    Streamlit -->|Renders Itinerary| User
+    EndState -->|Render in UI & Download| Streamlit
+    EndState -->|Return JSON Response| FastAPI
+```
+
+---
+
+## 📁 Repository Structure
+
+```
+AI_Trip_Planner/
+├── agent/
+│   └── agentic_workflow.py    # LangGraph ReAct Agent (~25 lines)
+├── tools/                     # The 4 Core Business Tools (~10 lines each)
+│   ├── place_search_tool.py   # Tavily web discovery
+│   ├── weather_info_tool.py   # OpenWeatherMap live forecasts
+│   ├── currency_conversion_tool.py # ExchangeRate-API FX conversion
+│   ├── expense_calculator_tool.py  # Deterministic expense calculator
+│   └── __init__.py            # Consolidates get_tools()
+├── utils/                     # Infrastructure helpers
+│   ├── config_loader.py       # Reads config.yaml
+│   └── model_loader.py        # Initializes Gemini LLM with retry policy
+├── config/
+│   └── config.yaml            # Model configuration
+├── prompt_library/
+│   └── prompt.py              # System prompt and formatting rules
+├── notes/                     # 📚 Business Analyst documentation & interview guides
+│   ├── agentic_workflow_notes.md
+│   ├── tools_notes.md
+│   ├── utils_notes.md
+│   ├── docker_notes.md
+│   ├── api_notes.md
+│   ├── dependencies_notes.md
+│   └── streamlit_notes.md
+├── tests/
+│   └── unit/test_calculator.py# Automated pytest suite
+├── streamlit_app.py           # Streamlit frontend UI
+├── main.py                    # FastAPI backend REST API
+├── entrypoint.sh              # Multi-process container startup
+├── Dockerfile                 # Layer-cached container definition
+├── pyproject.toml             # Modern PEP 621 packaging
+└── requirements.txt           # Dependency lockfile
 ```
 
 ---
@@ -86,7 +126,7 @@ If you don't have `uv` installed:
 pip install uv
 ```
 
-### 2. Activate Virtual Environment
+### 2. Activate Virtual Environment (copy activate.ps1 file contents to terminal)
 Activate your existing workspace virtual environment:
 * **Windows (PowerShell):**
   ```powershell
